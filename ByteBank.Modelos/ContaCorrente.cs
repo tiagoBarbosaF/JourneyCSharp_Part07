@@ -32,7 +32,7 @@ namespace ByteBank.Modelos
             }
             set
             {
-                if (value < 0)
+                if( value < 0 )
                 {
                     return;
                 }
@@ -48,12 +48,12 @@ namespace ByteBank.Modelos
         /// <param name="numero"> Representa o valor da propriedade <see cref="Numero"/> e deve possuir um valor maior que zero. </param>
         public ContaCorrente(int agencia, int numero)
         {
-            if (numero <= 0)
+            if( numero <= 0 )
             {
                 throw new ArgumentException("O argumento agencia deve ser maior que 0.", nameof(agencia));
             }
 
-            if (numero <= 0)
+            if( numero <= 0 )
             {
                 throw new ArgumentException("O argumento numero deve ser maior que 0.", nameof(numero));
             }
@@ -73,12 +73,12 @@ namespace ByteBank.Modelos
         /// <param name="valor"> Representa o valor do saque, deve ser maior que 0 e menor que o <see cref="Saldo"/>. </param>
         public void Sacar(double valor)
         {
-            if (valor < 0)
+            if( valor < 0 )
             {
                 throw new ArgumentException("Valor inválido para o saque.", nameof(valor));
             }
 
-            if (_saldo < valor)
+            if( _saldo < valor )
             {
                 ContadorSaquesNaoPermitidos++;
                 throw new SaldoInsuficienteException(Saldo, valor);
@@ -94,7 +94,7 @@ namespace ByteBank.Modelos
 
         public void Transferir(double valor, ContaCorrente contaDestino)
         {
-            if (valor < 0)
+            if( valor < 0 )
             {
                 throw new ArgumentException("Valor inválido para a transferência.", nameof(valor));
             }
@@ -103,13 +103,23 @@ namespace ByteBank.Modelos
             {
                 Sacar(valor);
             }
-            catch (SaldoInsuficienteException ex)
+            catch( SaldoInsuficienteException ex )
             {
                 ContadorTransferenciasNaoPermitidas++;
                 throw new OperacaoFinanceiraException("Operação não realizada.", ex);
             }
 
             contaDestino.Depositar(valor);
+        }
+
+        public override bool Equals(object obj)
+        {
+            ContaCorrente outraConta = obj as ContaCorrente;
+
+            if( outraConta == null )
+                return false;
+
+            return Agencia == outraConta.Agencia && Numero == outraConta.Numero;
         }
     }
 
